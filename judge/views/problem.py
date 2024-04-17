@@ -165,8 +165,7 @@ class ProblemDetail(ProblemMixin, SolvedProblemMixin, CommentedDetailView):
                                                   get_contest_submission_count(self.object, user.profile,
                                                                                user.profile.current_contest.virtual), 0)
 
-        #context['available_judges'] = Judge.objects.filter(online=True, problems=self.object)
-        context['available_judges'] = []
+        context['available_judges'] = Judge.objects.filter(online=True, problems=self.object)
         context['show_languages'] = self.object.allowed_languages.count() != Language.objects.count()
         context['has_pdf_render'] = PDF_RENDERING_ENABLED
         context['completed_problem_ids'] = self.get_completed_problems()
