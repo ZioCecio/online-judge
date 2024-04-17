@@ -679,15 +679,15 @@ class ProblemSubmit(LoginRequiredMixin, ProblemMixin, TitleMixin, SingleObjectFo
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
 
-        form.fields['language'].queryset = (
-            self.object.usable_languages.order_by('name', 'key')
-            .prefetch_related(Prefetch('runtimeversion_set', RuntimeVersion.objects.order_by('priority')))
-        )
-
-        form_data = getattr(form, 'cleaned_data', form.initial)
-        if 'language' in form_data:
-            form.fields['source'].widget.mode = form_data['language'].ace
-        form.fields['source'].widget.theme = self.request.profile.resolved_ace_theme
+        #form.fields['language'].queryset = (
+        #    self.object.usable_languages.order_by('name', 'key')
+        #    .prefetch_related(Prefetch('runtimeversion_set', RuntimeVersion.objects.order_by('priority')))
+        #)
+#
+        #form_data = getattr(form, 'cleaned_data', form.initial)
+        #if 'language' in form_data:
+        #    form.fields['source'].widget.mode = form_data['language'].ace
+        #form.fields['source'].widget.theme = self.request.profile.resolved_ace_theme
 
         return form
 
