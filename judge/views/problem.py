@@ -165,7 +165,8 @@ class ProblemDetail(ProblemMixin, SolvedProblemMixin, CommentedDetailView):
                                                   get_contest_submission_count(self.object, user.profile,
                                                                                user.profile.current_contest.virtual), 0)
 
-        context['available_judges'] = Judge.objects.filter(online=True, problems=self.object)
+        #context['available_judges'] = Judge.objects.filter(online=True, problems=self.object)
+        context['available_judges'] = []
         context['show_languages'] = self.object.allowed_languages.count() != Language.objects.count()
         context['has_pdf_render'] = PDF_RENDERING_ENABLED
         context['completed_problem_ids'] = self.get_completed_problems()
@@ -679,15 +680,15 @@ class ProblemSubmit(LoginRequiredMixin, ProblemMixin, TitleMixin, SingleObjectFo
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
 
-        #form.fields['language'].queryset = (
-        #    self.object.usable_languages.order_by('name', 'key')
-        #    .prefetch_related(Prefetch('runtimeversion_set', RuntimeVersion.objects.order_by('priority')))
-        #)
-#
-        #form_data = getattr(form, 'cleaned_data', form.initial)
-        #if 'language' in form_data:
-        #    form.fields['source'].widget.mode = form_data['language'].ace
-        #form.fields['source'].widget.theme = self.request.profile.resolved_ace_theme
+        form.fields['language'].queryset = (
+            self.object.usable_languages.order_by('name', 'key')
+            .prefetch_related(Prefetch('runtimeversion_set', RuntimeVersion.objects.order_by('priority')))
+        )
+
+        form_data = getattr(form, 'cleaned_data', form.initial)
+        if 'language' in form_data:
+            form.fields['source'].widget.mode = form_data['language'].ace
+        form.fields['source'].widget.theme = self.request.profile.resolved_ace_theme
 
         return form
 
@@ -742,8 +743,7 @@ class ProblemSubmit(LoginRequiredMixin, ProblemMixin, TitleMixin, SingleObjectFo
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #context['langs'] = Language.objects.all()
-        context['langs'] = []
+        context['langs'] = Language.objects.all()
         context['no_judges'] = not context['form'].fields['language'].queryset
         context['submission_limit'] = self.contest_problem and self.contest_problem.max_submissions
         context['submissions_left'] = self.remaining_submission_count
