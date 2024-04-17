@@ -76,7 +76,7 @@ class RegistrationView(OldRegistrationView):
         profile.timezone = cleaned_data['timezone']
         profile.language = cleaned_data['language']
         profile.organizations.add(*cleaned_data['organizations'])
-        profile.save()
+        # profile.save()
 
         if newsletter_id is not None and cleaned_data['newsletter']:
             Subscription(user=user, newsletter_id=newsletter_id, subscribed=True).save()
