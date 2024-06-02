@@ -22,10 +22,7 @@
         {% if is_pretest %}
             <h3>{{ _('Pretest Execution Results') }}</h3>
         {% else %}
-            <h3>
-                {{ _('Execution Results') }}
-                <span style="color: red"> *Update the page to see the results!</span>
-            </h3>
+            <h3>{{ _('Execution Results') }}</h3>
         {% endif %}
         <br>
         {% if statuses or not submission.is_graded %}
